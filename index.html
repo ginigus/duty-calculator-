@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -134,13 +134,23 @@
   }
   .rate-status span b { color: var(--accent); }
 
+  /* Обертка для мобильного скролла таблицы */
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    margin-bottom: 16px;
+  }
+
   table{
     width:100%;
     border-collapse:collapse;
     background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:10px;
-    overflow:hidden;
+    border:none;
+    border-radius:0;
   }
   thead th{
     background:var(--panel-2);
@@ -152,6 +162,7 @@
     padding:10px 8px;
     text-align:right;
     border-bottom:1px solid var(--border);
+    white-space: nowrap;
   }
   thead th:first-child, thead th:nth-child(2), thead th:nth-child(5){text-align:left;}
   tbody td{
@@ -161,6 +172,7 @@
     font-family:var(--mono);
     font-size:13px;
     vertical-align: middle;
+    white-space: nowrap;
   }
   tbody tr:last-child td{border-bottom:none;}
   
@@ -200,7 +212,7 @@
 
   tbody td.calc{color:var(--muted);}
   tbody td.calc.result{color:var(--accent);font-weight:600;}
-  tbody td.calc.eur-unit{color:#76e3b2;font-weight:600;} /* Зеленая подсветка цены за м2 в евро */
+  tbody td.calc.eur-unit{color:#76e3b2;font-weight:600;}
   
   td.del{width:30px;text-align:center;padding:0;}
   td.del button{
@@ -217,6 +229,7 @@
     background:var(--panel-2);
     border-top:2px solid var(--border);
     font-size:12px;
+    white-space: nowrap;
   }
   tfoot td:first-child{text-align:left;color:var(--muted);font-weight:400;}
   tfoot td.grand{color:var(--accent);font-size:14px;}
@@ -249,10 +262,32 @@
   }
   .legend code{color:var(--accent);background:none;font-family:var(--mono);}
 
+  /* Адаптивность для смартфонов и планшетов */
   @media(max-width:900px){
-    .fc-grid{grid-template-columns:repeat(2,1fr);}
-    .rates{flex-wrap:wrap;}
-    table, thead, tbody, tfoot, tr, th, td{font-size:10px;}
+    body{
+      padding:12px 8px 60px;
+    }
+    .fc-grid{
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+    .rates{
+      gap:8px;
+    }
+    .rates .rate-item{
+      padding:8px 10px;
+      font-size:12px;
+    }
+    .rates input{
+      width:65px;
+    }
+    h1{
+      font-size:18px;
+    }
+    .sub{
+      font-size:11.5px;
+      margin-bottom:16px;
+    }
   }
 </style>
 </head>
@@ -313,43 +348,45 @@
     </div>
   </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Кол-во (м²)</th>
-        <th>Цена за ед.</th>
-        <th>Цена за ед., ₽</th>
-        <th>Паллет, шт.</th>
-        <th>Цена за паллету</th>
-        <th>Доставка, ₽</th>
-        <th>Пошлина</th>
-        <th>НДС</th>
-        <th>Там. сбор</th>
-        <th>Фикс. расходы</th>
-        <th>Итого с НДС, ₽</th>
-        <th>Цена за м², €</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="rows"></tbody>
-    <tfoot>
-      <tr>
-        <td>ИТОГО</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td id="sumDelivery">0,00</td>
-        <td id="sumDuty">0,00</td>
-        <td id="sumVat">0,00</td>
-        <td id="sumCustomsFee">0,00</td>
-        <td id="sumFixed">0,00</td>
-        <td class="grand" id="sumGrand">0,00</td>
-        <td></td>
-        <td></td>
-      </tr>
-    </tfoot>
-  </table>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Кол-во (м²)</th>
+          <th>Цена за ед.</th>
+          <th>Цена за ед., ₽</th>
+          <th>Паллет, шт.</th>
+          <th>Цена за паллету</th>
+          <th>Доставка, ₽</th>
+          <th>Пошлина</th>
+          <th>НДС</th>
+          <th>Там. сбор</th>
+          <th>Фикс. расходы</th>
+          <th>Итого с НДС, ₽</th>
+          <th>Цена за м², €</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+      <tfoot>
+        <tr>
+          <td>ИТОГО</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td id="sumDelivery">0,00</td>
+          <td id="sumDuty">0,00</td>
+          <td id="sumVat">0,00</td>
+          <td id="sumCustomsFee">0,00</td>
+          <td id="sumFixed">0,00</td>
+          <td class="grand" id="sumGrand">0,00</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
 
   <div class="toolbar">
     <button class="add-row" id="addRow">+ Добавить партию</button>
