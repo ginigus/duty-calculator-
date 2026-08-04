@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -26,7 +26,7 @@
     font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     padding:32px 16px 80px;
   }
-  .wrap{max-width:1160px;margin:0 auto;}
+  .wrap{max-width:1340px;margin:0 auto;}
   h1{
     font-size:22px;
     font-weight:700;
@@ -149,13 +149,13 @@
     text-transform:uppercase;
     letter-spacing:0.06em;
     font-weight:600;
-    padding:10px 10px;
+    padding:10px 8px;
     text-align:right;
     border-bottom:1px solid var(--border);
   }
   thead th:first-child, thead th:nth-child(2), thead th:nth-child(5){text-align:left;}
   tbody td{
-    padding:8px 10px;
+    padding:8px 8px;
     border-bottom:1px solid var(--border);
     text-align:right;
     font-family:var(--mono);
@@ -176,9 +176,9 @@
   }
   
   tbody input.auto-width {
-    width: 95px;
-    min-width: 75px;
-    max-width: 220px;
+    width: 90px;
+    min-width: 70px;
+    max-width: 180px;
   }
 
   tbody select.currency-select {
@@ -188,19 +188,21 @@
     color:var(--accent);
     font-family:var(--mono);
     font-size:12px;
-    padding:6px 6px;
+    padding:6px 4px;
     cursor:pointer;
   }
 
   .cell-group {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     align-items: center;
   }
 
   tbody td.calc{color:var(--muted);}
   tbody td.calc.result{color:var(--accent);font-weight:600;}
-  td.del{width:36px;text-align:center;padding:0;}
+  tbody td.calc.eur-unit{color:#76e3b2;font-weight:600;} /* Зеленая подсветка цены за м2 в евро */
+  
+  td.del{width:30px;text-align:center;padding:0;}
   td.del button{
     background:none;border:none;color:var(--danger);
     cursor:pointer;font-size:16px;line-height:1;padding:6px;
@@ -208,15 +210,16 @@
   td.del button:hover{color:#fff;background:var(--danger);border-radius:4px;}
 
   tfoot td{
-    padding:12px 10px;
+    padding:12px 8px;
     font-family:var(--mono);
     font-weight:700;
     text-align:right;
     background:var(--panel-2);
     border-top:2px solid var(--border);
+    font-size:12px;
   }
   tfoot td:first-child{text-align:left;color:var(--muted);font-weight:400;}
-  tfoot td.grand{color:var(--accent);font-size:15px;}
+  tfoot td.grand{color:var(--accent);font-size:14px;}
 
   .toolbar{
     display:flex;
@@ -246,10 +249,10 @@
   }
   .legend code{color:var(--accent);background:none;font-family:var(--mono);}
 
-  @media(max-width:700px){
+  @media(max-width:900px){
     .fc-grid{grid-template-columns:repeat(2,1fr);}
     .rates{flex-wrap:wrap;}
-    table, thead, tbody, tfoot, tr, th, td{font-size:11px;}
+    table, thead, tbody, tfoot, tr, th, td{font-size:10px;}
   }
 </style>
 </head>
@@ -302,16 +305,18 @@
       НДС
       <input type="number" id="vatRate" value="22" step="0.1" data-save="vatRate"> %
     </div>
-    <div class="rate-status" id="rateStatus">
-      <span>Курсы валют: <b>ЦБ РФ (онлайн)</b></span>
-      <span id="updateTime">Загрузка...</span>
+    <div class="rate-item-status" style="display:flex; align-items:center;">
+      <div class="rate-status" id="rateStatus">
+        <span>Курсы валют: <b>ЦБ РФ (онлайн)</b></span>
+        <span id="updateTime">Загрузка...</span>
+      </div>
     </div>
   </div>
 
   <table>
     <thead>
       <tr>
-        <th>Количество</th>
+        <th>Кол-во (м²)</th>
         <th>Цена за ед.</th>
         <th>Цена за ед., ₽</th>
         <th>Паллет, шт.</th>
@@ -321,7 +326,8 @@
         <th>НДС</th>
         <th>Там. сбор</th>
         <th>Фикс. расходы</th>
-        <th>Итого с НДС</th>
+        <th>Итого с НДС, ₽</th>
+        <th>Цена за м², €</th>
         <th></th>
       </tr>
     </thead>
@@ -340,6 +346,7 @@
         <td id="sumFixed">0,00</td>
         <td class="grand" id="sumGrand">0,00</td>
         <td></td>
+        <td></td>
       </tr>
     </tfoot>
   </table>
@@ -349,12 +356,13 @@
   </div>
 
   <div class="legend">
-    Стоимость всего = Количество × Цена за ед. (в пересчете на ₽)<br>
+    Стоимость всего = Количество (м²) × Цена за ед. (в пересчете на ₽)<br>
     Доставка = Паллет, шт. × Цена за паллету (в пересчете на ₽) × <code>коэффициент 1.312 (если паллет 1 или 2)</code><br>
     Пошлина = (Стоимость всего + Доставка) × <code>ставка пошлины</code><br>
     НДС = (Стоимость всего + Доставка + Пошлина) × <code>ставка НДС</code><br>
     Там. сбор — фиксированная ставка по шкале ПП РФ № 1637 от 28.11.2024 (в ред. № 1638 от 23.10.2025), в зависимости от таможенной стоимости партии (Стоимость всего + Доставка)<br>
-    Итого с НДС = Стоимость всего + Доставка + Пошлина + НДС + Там. сбор + Фикс. расходы
+    Итого с НДС = Стоимость всего + Доставка + Пошлина + НДС + Там. сбор + Фикс. расходы<br>
+    <b>Цена за м², €</b> = Итого с НДС (в ₽) ÷ Количество (м²) ÷ Курс Евро (€)
   </div>
 </div>
 
@@ -370,7 +378,7 @@ function fmt(n){
 function updateInputWidth(input) {
   const val = input.value || input.placeholder || '';
   const len = Math.max(val.length, 4);
-  input.style.width = (len * 11 + 28) + 'px';
+  input.style.width = (len * 11 + 24) + 'px';
 }
 
 function getFixedTotal(){
@@ -475,6 +483,7 @@ function addRow(qty, price, currency, pallets, palletPrice, palletCurrency){
     <td class="calc customsFee">0,00</td>
     <td class="calc fixed">0,00</td>
     <td class="calc result grand">0,00</td>
+    <td class="calc eur-unit">0,00</td>
     <td class="del"><button title="Удалить">✕</button></td>
   `;
   rowsBody.appendChild(tr);
@@ -492,14 +501,12 @@ function addRow(qty, price, currency, pallets, palletPrice, palletCurrency){
 }
 
 function saveAllData() {
-  // Сохраняем шапку и курсы
   const settings = {};
   document.querySelectorAll('[data-save]').forEach(inp => {
     settings[inp.dataset.save] = inp.value;
   });
-  localStorage.setItem('calc_settings', JSON.stringify(settings));
+  localStorage.setItem('calc_settings_v2', JSON.stringify(settings));
 
-  // Сохраняем строки таблицы
   const rowsData = [];
   rowsBody.querySelectorAll('tr').forEach(tr => {
     rowsData.push({
@@ -511,14 +518,13 @@ function saveAllData() {
       palletCur: tr.querySelector('.pallet-cur').value
     });
   });
-  localStorage.setItem('calc_rows', JSON.stringify(rowsData));
+  localStorage.setItem('calc_rows_v2', JSON.stringify(rowsData));
 }
 
 function loadAllData() {
   let hasData = false;
   
-  // Загружаем настройки
-  const savedSettings = localStorage.getItem('calc_settings');
+  const savedSettings = localStorage.getItem('calc_settings_v2');
   if(savedSettings) {
     try {
       const settings = JSON.parse(savedSettings);
@@ -530,8 +536,7 @@ function loadAllData() {
     } catch(e) {}
   }
 
-  // Загружаем строки таблицы
-  const savedRows = localStorage.getItem('calc_rows');
+  const savedRows = localStorage.getItem('calc_rows_v2');
   if(savedRows) {
     try {
       const rowsData = JSON.parse(savedRows);
@@ -587,6 +592,7 @@ function recalcAll(){
       tr.querySelector('.customsFee').textContent = '—';
       tr.querySelector('.fixed').textContent = '—';
       tr.querySelector('.grand').textContent = '—';
+      tr.querySelector('.eur-unit').textContent = '—';
       return;
     }
 
@@ -597,6 +603,8 @@ function recalcAll(){
     const feeVal = customsFee(customsValue);
     const grand = total + delivery + dutyVal + vatVal + feeVal + fixed;
 
+    const eurUnit = (qty > 0 && eurRate > 0) ? (grand / qty) / eurRate : 0;
+
     tr.querySelector('.priceRub').textContent = fmt(priceRub);
     tr.querySelector('.delivery').textContent = fmt(delivery);
     tr.querySelector('.duty').textContent = fmt(dutyVal);
@@ -604,6 +612,7 @@ function recalcAll(){
     tr.querySelector('.customsFee').textContent = fmt(feeVal);
     tr.querySelector('.fixed').textContent = fmt(fixed);
     tr.querySelector('.grand').textContent = fmt(grand);
+    tr.querySelector('.eur-unit').textContent = fmt(eurUnit);
 
     sDelivery += delivery;
     sDuty += dutyVal;
@@ -620,7 +629,6 @@ function recalcAll(){
   document.getElementById('sumFixed').textContent = fmt(sFixed);
   document.getElementById('sumGrand').textContent = fmt(sGrand);
 
-  // Сохраняем состояние при каждом изменении
   saveAllData();
 }
 
@@ -632,7 +640,6 @@ document.querySelectorAll('.fixed-costs input, .rates input').forEach(inp => inp
   recalcAll();
 }));
 
-// Инициализация при загрузке страницы
 const hasData = loadAllData();
 
 if (!hasData) {
