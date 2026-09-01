@@ -364,7 +364,7 @@
 
   <div class="legend">
     Стоимость всего = Количество × Цена за ед. (в пересчете на ₽)<br>
-    Доставка = Паллет, шт. × Цена за паллету (в пересчете на ₽) × <code>коэффициент 1.312 (если паллет 1 или 2)</code><br>
+    Доставка = Паллет, шт. × Цена за паллету (в пересчете на ₽)<br>
     Пошлина = (Стоимость всего + Доставка) × <code>ставка пошлины</code><br>
     НДС = (Стоимость всего + Доставка + Пошлина) × <code>ставка НДС</code><br>
     Там. сбор — фиксированная ставка по шкале ПП РФ № 1637 от 28.11.2024 (в ред. № 1638 от 23.10.2025), в зависимости от таможенной стоимости партии (Стоимость всего + Доставка)<br>
@@ -547,8 +547,7 @@ function recalcAll(){
     const priceRub = priceVal * priceRate;
     const palletPriceRub = palletPriceVal * palletRate;
     
-    const palletMultiplier = (pallets === 1 || pallets === 2) ? 1.312 : 1.0;
-    const delivery = pallets * palletPriceRub * palletMultiplier;
+    const delivery = pallets * palletPriceRub;
 
     if(qty === 0 && priceVal === 0 && pallets === 0 && palletPriceVal === 0){
       tr.querySelector('.priceRub').textContent = '—';
