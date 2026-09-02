@@ -324,6 +324,8 @@
         <th>Количество</th>
         <th>Цена за ед.</th>
         <th>Цена за ед., ₽</th>
+        <th>Плотность, г/м²</th>
+        <th>Вес, кг</th>
         <th>Паллет, шт.</th>
         <th>Цена за паллету</th>
         <th>Доставка, ₽</th>
@@ -343,6 +345,8 @@
         <td>ИТОГО</td>
         <td></td>
         <td></td>
+        <td></td>
+        <td id="sumWeight">0,00</td>
         <td></td>
         <td></td>
         <td id="sumDelivery">0,00</td>
@@ -364,6 +368,7 @@
 
   <div class="legend">
     Стоимость всего = Количество × Цена за ед. (в пересчете на ₽)<br>
+    Вес = Количество (м²) × Плотность (г/м²) / 1000<br>
     Доставка = Паллет, шт. × Цена за паллету (в пересчете на ₽)<br>
     Пошлина = (Стоимость всего + Доставка) × <code>ставка пошлины</code><br>
     НДС = (Стоимость всего + Доставка + Пошлина) × <code>ставка НДС</code><br>
@@ -462,7 +467,7 @@ async function fetchRates() {
   }
 }
 
-function addRow(qty, price, currency, pallets, palletPrice, palletCurrency){
+function addRow(qty, price, currency, pallets, palletPrice, palletCurrency, density){
   rowCount++;
   const tr = document.createElement('tr');
   tr.dataset.id = rowCount;
@@ -482,6 +487,8 @@ function addRow(qty, price, currency, pallets, palletPrice, palletCurrency){
       </div>
     </td>
     <td class="calc priceRub">0,00</td>
+    <td><input type="number" class="density auto-width" value="${density ?? 80}" placeholder="80"></td>
+    <td class="calc weight">0,00</td>
     <td><input type="number" class="pallets auto-width" value="${pallets ?? ''}" placeholder="0"></td>
     <td>
       <div class="cell-group">
@@ -523,12 +530,13 @@ function recalcAll(){
   document.getElementById('fcTotal').textContent = fmt(fixed) + ' ₽';
   const {duty: dutyRate, vat: vatRate, eur: eurRate, usd: usdRate, cny: cnyRate} = getRates();
 
-  let sDelivery=0, sDuty=0, sVat=0, sCustomsFee=0, sFixed=0, sGrand=0;
+  let sDelivery=0, sDuty=0, sVat=0, sCustomsFee=0, sFixed=0, sGrand=0, sWeight=0;
 
   rowsBody.querySelectorAll('tr').forEach(tr => {
     const qty = parseFloat(tr.querySelector('.qty').value) || 0;
     const priceVal = parseFloat(tr.querySelector('.priceVal').value) || 0;
     const priceCur = tr.querySelector('.price-cur').value;
+    const density = parseFloat(tr.querySelector('.density').value) || 0;
     
     const pallets = parseFloat(tr.querySelector('.pallets').value) || 0;
     const palletPriceVal = parseFloat(tr.querySelector('.palletPriceVal').value) || 0;
@@ -549,8 +557,11 @@ function recalcAll(){
     
     const delivery = pallets * palletPriceRub;
 
+    const weight = qty * density / 1000;
+
     if(qty === 0 && priceVal === 0 && pallets === 0 && palletPriceVal === 0){
       tr.querySelector('.priceRub').textContent = '—';
+      tr.querySelector('.weight').textContent = '—';
       tr.querySelector('.delivery').textContent = '—';
       tr.querySelector('.duty').textContent = '—';
       tr.querySelector('.vat').textContent = '—';
@@ -575,6 +586,7 @@ function recalcAll(){
     const sym = unitCurrencySymbol();
 
     tr.querySelector('.priceRub').textContent = fmt(priceRub);
+    tr.querySelector('.weight').textContent = fmt(weight) + ' кг';
     tr.querySelector('.delivery').textContent = fmt(delivery);
     tr.querySelector('.duty').textContent = fmt(dutyVal);
     tr.querySelector('.vat').textContent = fmt(vatVal);
@@ -590,8 +602,10 @@ function recalcAll(){
     sCustomsFee += feeVal;
     sFixed += fixed;
     sGrand += grand;
+    sWeight += weight;
   });
 
+  document.getElementById('sumWeight').textContent = fmt(sWeight) + ' кг';
   document.getElementById('sumDelivery').textContent = fmt(sDelivery);
   document.getElementById('sumDuty').textContent = fmt(sDuty);
   document.getElementById('sumVat').textContent = fmt(sVat);
