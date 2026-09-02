@@ -135,24 +135,56 @@
   }
   .rate-status span b { color: var(--accent); }
 
+  .table-scroll{
+    width:100%;
+    overflow-x:auto;
+    margin:0 auto;
+    border-radius:10px;
+  }
   table{
     width:100%;
-    border-collapse:collapse;
+    min-width:1400px;
+    table-layout:fixed;
+    border-collapse:separate;
+    border-spacing:0;
     background:var(--panel);
     border:1px solid var(--border);
     border-radius:10px;
-    overflow:hidden;
+  }
+  thead th, tbody td, tfoot td{
+    border-right:1px solid var(--border);
+  }
+  thead th:last-child, tbody td:last-child, tfoot td:last-child{
+    border-right:none;
   }
   thead th{
+    position:relative;
     background:var(--panel-2);
     color:var(--muted);
     font-size:11px;
     text-transform:uppercase;
     letter-spacing:0.06em;
     font-weight:600;
-    padding:10px 10px;
+    padding:10px 14px 10px 10px;
     text-align:right;
     border-bottom:1px solid var(--border);
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .col-resizer{
+    position:absolute;
+    top:0;
+    right:-4px;
+    width:10px;
+    height:100%;
+    cursor:col-resize;
+    user-select:none;
+    touch-action:none;
+    z-index:2;
+  }
+  .col-resizer:hover::after, .col-resizer.active::after{
+    background:var(--accent);
   }
   thead th:first-child, thead th:nth-child(2), thead th:nth-child(5){text-align:left;}
   tbody td{
@@ -318,24 +350,25 @@
     </div>
   </div>
 
-  <table>
+  <div class="table-scroll">
+  <table id="mainTable">
     <thead>
       <tr>
-        <th>Количество</th>
-        <th>Цена за ед.</th>
-        <th>Цена за ед., ₽</th>
-        <th>Плотность, г/м²</th>
-        <th>Вес, кг</th>
-        <th>Паллет, шт.</th>
-        <th>Цена за паллету</th>
-        <th>Доставка, ₽</th>
-        <th>Пошлина</th>
-        <th>НДС</th>
-        <th>Там. сбор</th>
-        <th>Фикс. расходы</th>
-        <th>Итого с НДС</th>
-        <th>Цена/ед. с НДС</th>
-        <th>Цена/ед. без НДС</th>
+        <th>Количество<span class="col-resizer"></span></th>
+        <th>Цена за ед.<span class="col-resizer"></span></th>
+        <th>Цена за ед., ₽<span class="col-resizer"></span></th>
+        <th>Плотность, г/м²<span class="col-resizer"></span></th>
+        <th>Вес, кг<span class="col-resizer"></span></th>
+        <th>Паллет, шт.<span class="col-resizer"></span></th>
+        <th>Цена за паллету<span class="col-resizer"></span></th>
+        <th>Доставка, ₽<span class="col-resizer"></span></th>
+        <th>Пошлина<span class="col-resizer"></span></th>
+        <th>НДС<span class="col-resizer"></span></th>
+        <th>Там. сбор<span class="col-resizer"></span></th>
+        <th>Фикс. расходы<span class="col-resizer"></span></th>
+        <th>Итого с НДС<span class="col-resizer"></span></th>
+        <th>Цена/ед. с НДС<span class="col-resizer"></span></th>
+        <th>Цена/ед. без НДС<span class="col-resizer"></span></th>
         <th></th>
       </tr>
     </thead>
@@ -361,6 +394,7 @@
       </tr>
     </tfoot>
   </table>
+  </div>
 
   <div class="toolbar">
     <button class="add-row" id="addRow">+ Добавить партию</button>
@@ -630,6 +664,39 @@ for(let i=0;i<4;i++) addRow();
 // Загружаем курсы валют при открытии
 fetchRates();
 recalcAll();
+
+// --- Ресайз колонок таблицы вручную ---
+(function initColumnResize(){
+  const table = document.getElementById('mainTable');
+  let activeTh = null, startX = 0, startWidth = 0;
+
+  table.querySelectorAll('thead th').forEach(th => {
+    const handle = th.querySelector('.col-resizer');
+    if(!handle) return;
+    handle.addEventListener('mousedown', (e) => {
+      activeTh = th;
+      startX = e.pageX;
+      startWidth = th.offsetWidth;
+      handle.classList.add('active');
+      document.body.style.cursor = 'col-resize';
+      e.preventDefault();
+    });
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if(!activeTh) return;
+    const newWidth = Math.max(40, startWidth + (e.pageX - startX));
+    activeTh.style.width = newWidth + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if(activeTh){
+      table.querySelectorAll('.col-resizer.active').forEach(h => h.classList.remove('active'));
+      activeTh = null;
+      document.body.style.cursor = '';
+    }
+  });
+})();
 </script>
 </body>
 </html>
