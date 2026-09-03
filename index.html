@@ -24,18 +24,21 @@
     background:var(--bg);
     color:var(--text);
     font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    padding:32px 16px 80px;
+    padding:24px 20px 80px;
   }
-  .wrap{max-width:1160px;margin:0 auto;}
+  .wrap{
+    width: 98%;
+    max-width: 1920px;
+    margin: 0 auto;
+  }
   h1{
-    font-size:22px;
+    font-size:24px;
     font-weight:700;
     letter-spacing:0.02em;
-    margin:0 0 4px;
+    margin:0 0 6px;
   }
-  .sub{color:var(--muted);font-size:13px;margin-bottom:28px;}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:24px;}
 
-  /* Убираем стандартные стрелочки у input[type=number] для всех браузеров */
   input::-webkit-outer-spin-button,
   input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -45,25 +48,26 @@
     -moz-appearance: textfield;
   }
 
+  /* Фиксированные расходы */
   .fixed-costs{
     background:var(--panel);
     border:1px solid var(--border);
     border-radius:10px;
     padding:18px 20px;
-    margin-bottom:24px;
+    margin-bottom:20px;
   }
   .fixed-costs h2{
-    font-size:13px;
+    font-size:12px;
     text-transform:uppercase;
     letter-spacing:0.08em;
     color:var(--muted);
-    margin:0 0 14px;
+    margin:0 0 12px;
     font-weight:600;
   }
   .fc-grid{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:14px;
+    grid-template-columns:repeat(3, 1fr);
+    gap:16px;
   }
   .fc-item label{
     display:block;
@@ -72,7 +76,8 @@
     margin-bottom:6px;
   }
   .fc-item input{
-    width:100%;
+    width:120px;
+    max-width:100%;
     background:var(--input-bg);
     border:1px solid var(--border);
     border-radius:6px;
@@ -87,9 +92,10 @@
     border-top:1px dashed var(--border);
     display:flex;
     justify-content:space-between;
+    align-items:center;
     font-size:14px;
   }
-  .fc-total b{color:var(--accent);font-family:var(--mono);}
+  .fc-total b{color:var(--accent);font-family:var(--mono);font-size:16px;}
   .fc-note{
     margin-top:10px;
     font-size:11.5px;
@@ -99,8 +105,8 @@
 
   .rates{
     display:flex;
-    gap:20px;
-    margin-bottom:24px;
+    gap:12px;
+    margin-bottom:20px;
     font-size:13px;
     color:var(--muted);
     flex-wrap: wrap;
@@ -110,13 +116,13 @@
     background:var(--panel);
     border:1px solid var(--border);
     border-radius:8px;
-    padding:10px 14px;
+    padding:8px 12px;
     display:flex;
     align-items:center;
     gap:8px;
   }
   .rates input{
-    width:76px;
+    width:70px;
     background:var(--input-bg);
     border:1px solid var(--border);
     border-radius:4px;
@@ -129,78 +135,119 @@
   .rate-status {
     font-size: 11px;
     color: var(--muted);
+    margin-left: auto;
     display: flex;
     flex-direction: column;
+    align-items: flex-end;
     gap: 2px;
   }
   .rate-status span b { color: var(--accent); }
 
+  .table-scroll{
+    width:100%;
+    overflow-x:auto;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:var(--panel);
+  }
   table{
     width:100%;
     border-collapse:collapse;
     background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:10px;
-    overflow:hidden;
+  }
+  thead th, tbody td, tfoot td{
+    border-right:1px solid var(--border);
+  }
+  thead th:last-child, tbody td:last-child, tfoot td:last-child{
+    border-right:none;
   }
   thead th{
+    position:relative;
     background:var(--panel-2);
     color:var(--muted);
     font-size:11px;
     text-transform:uppercase;
-    letter-spacing:0.06em;
+    letter-spacing:0.05em;
     font-weight:600;
-    padding:10px 10px;
+    padding:10px 8px;
     text-align:right;
     border-bottom:1px solid var(--border);
+    white-space:nowrap;
   }
-  thead th:first-child, thead th:nth-child(2), thead th:nth-child(5){text-align:left;}
+  .col-resizer{
+    position:absolute;
+    top:0;
+    right:-4px;
+    width:8px;
+    height:100%;
+    cursor:col-resize;
+    user-select:none;
+    touch-action:none;
+    z-index:2;
+  }
+  .col-resizer:hover::after, .col-resizer.active::after{
+    content:'';
+    position:absolute;
+    top:0;
+    right:3px;
+    width:2px;
+    height:100%;
+    background:var(--accent);
+  }
+  thead th:first-child{text-align:left;}
   tbody td{
-    padding:8px 10px;
+    padding:0;
     border-bottom:1px solid var(--border);
     text-align:right;
     font-family:var(--mono);
     font-size:13px;
     vertical-align: middle;
   }
+  tbody td.calc{padding:8px 8px;}
   tbody tr:last-child td{border-bottom:none;}
   
-  tbody input{
-    background:var(--input-bg);
-    border:1px solid var(--border);
-    border-radius:5px;
+  tbody input, select.currency-select{
+    background:transparent;
+    border:none;
     color:var(--text);
     font-family:var(--mono);
     font-size:13px;
-    padding:6px 8px;
+    padding:8px 6px;
     text-align:right;
+    box-sizing:border-box;
+    width:100%;
+    outline: none;
   }
-  
-  tbody input.auto-width {
-    width: 95px;
-    min-width: 75px;
-    max-width: 220px;
+  tbody input:focus{
+    background:var(--input-bg);
   }
 
-  tbody select.currency-select {
+  select.currency-select {
     background:var(--input-bg);
     border:1px solid var(--border);
-    border-radius:5px;
     color:var(--accent);
-    font-family:var(--mono);
     font-size:12px;
-    padding:6px 6px;
     cursor:pointer;
+    width:auto;
+    border-radius: 4px;
+    padding:2px 4px;
   }
 
   .cell-group {
     display: flex;
-    gap: 6px;
+    gap: 4px;
     align-items: center;
+    justify-content: flex-end;
+    padding-right: 6px;
   }
+  .cell-group input{
+    flex: 1;
+  }
+  .cell-symbol{color:var(--accent);font-size:12px;}
 
   tbody td.calc{color:var(--muted);}
   tbody td.calc.result{color:var(--accent);font-weight:600;}
+  tbody td.calc.eur-res{color:#52c41a;font-weight:700;}
   td.del{width:36px;text-align:center;padding:0;}
   td.del button{
     background:none;border:none;color:var(--danger);
@@ -209,7 +256,7 @@
   td.del button:hover{color:#fff;background:var(--danger);border-radius:4px;}
 
   tfoot td{
-    padding:12px 10px;
+    padding:12px 8px;
     font-family:var(--mono);
     font-weight:700;
     text-align:right;
@@ -217,7 +264,8 @@
     border-top:2px solid var(--border);
   }
   tfoot td:first-child{text-align:left;color:var(--muted);font-weight:400;}
-  tfoot td.grand{color:var(--accent);font-size:15px;}
+  tfoot td.grand{color:var(--accent);font-size:14px;}
+  tfoot td.grand-eur{color:#52c41a;font-size:14px;}
 
   .toolbar{
     display:flex;
@@ -230,10 +278,11 @@
     color:var(--accent);
     border:1px solid var(--accent-dim);
     border-radius:6px;
-    padding:9px 16px;
+    padding:9px 18px;
     font-size:13px;
     font-weight:600;
     cursor:pointer;
+    transition: all 0.2s;
   }
   button.add-row:hover{background:var(--accent);color:#1a1400;}
 
@@ -248,16 +297,16 @@
   .legend code{color:var(--accent);background:none;font-family:var(--mono);}
 
   @media(max-width:700px){
-    .fc-grid{grid-template-columns:repeat(2,1fr);}
+    .fc-grid{grid-template-columns:repeat(1,1fr);}
     .rates{flex-wrap:wrap;}
-    table, thead, tbody, tfoot, tr, th, td{font-size:11px;}
+    .rate-status{margin-left:0; align-items:flex-start;}
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Калькулятор пошлины и НДС</h1>
-  <div class="sub">Импорт бумаги — расчёт стоимости партии с учётом пошлины, НДС и фиксированных расходов</div>
+  <div class="sub">Импорт бумаги — расчёт себестоимости партии с пересчётом из юаней и валютной доставки за место в рубли и евро</div>
 
   <div class="fixed-costs">
     <h2>Фиксированные расходы за партию, ₽</h2>
@@ -279,10 +328,14 @@
       <span>Итого фикс. расходов на партию (без там. сбора)</span>
       <b id="fcTotal">48 000,00 ₽</b>
     </div>
-    <div class="fc-note">Сбор за таможенное оформление считается отдельно по каждой партии — по шкале Постановления Правительства РФ № 1637 от 28.11.2024 (в ред. № 1638 от 23.10.2025), в зависимости от таможенной стоимости (Стоимость всего + Доставка).</div>
+    <div class="fc-note">Сбор за таможенное оформление считается отдельно по каждой партии — по шкале Постановления Правительства РФ № 1637 от 28.11.2024 (в ред. № 1638 от 23.10.2025), в зависимости от таможенной стоимости.</div>
   </div>
 
   <div class="rates">
+    <div class="rate-item">
+      Курс юаня (¥)
+      <input type="number" id="cnyRate" value="11.50" step="0.01"> ₽
+    </div>
     <div class="rate-item">
       Курс евро (€)
       <input type="number" id="eurRate" value="100.00" step="0.01"> ₽
@@ -292,10 +345,6 @@
       <input type="number" id="usdRate" value="80.00" step="0.01"> ₽
     </div>
     <div class="rate-item">
-      Курс юаня (¥)
-      <input type="number" id="cnyRate" value="11.50" step="0.01"> ₽
-    </div>
-    <div class="rate-item">
       Пошлина
       <input type="number" id="dutyRate" value="5" step="0.1"> %
     </div>
@@ -303,26 +352,40 @@
       НДС
       <input type="number" id="vatRate" value="22" step="0.1"> %
     </div>
+    <div class="rate-item">
+      Доставка за место
+      <input type="number" id="deliveryRate" value="0" step="0.1">
+      <select class="currency-select" id="deliveryCurrency">
+        <option value="USD">$</option>
+        <option value="EUR">€</option>
+        <option value="CNY">¥</option>
+        <option value="RUB" selected>₽</option>
+      </select>
+    </div>
     <div class="rate-status" id="rateStatus">
       <span>Курсы валют: <b>ЦБ РФ (онлайн)</b></span>
       <span id="updateTime">Загрузка...</span>
     </div>
   </div>
 
-  <table>
+  <div class="table-scroll">
+  <table id="mainTable">
     <thead>
       <tr>
-        <th>Количество</th>
-        <th>Цена за ед.</th>
-        <th>Цена за ед., ₽</th>
-        <th>Паллет, шт.</th>
-        <th>Цена за паллету</th>
-        <th>Доставка, ₽</th>
-        <th>Пошлина</th>
-        <th>НДС</th>
-        <th>Там. сбор</th>
-        <th>Фикс. расходы</th>
-        <th>Итого с НДС</th>
+        <th>Количество, м²<span class="col-resizer"></span></th>
+        <th>Входящая цена, ¥<span class="col-resizer"></span></th>
+        <th>Товар, ₽<span class="col-resizer"></span></th>
+        <th>Плотность, г/м²<span class="col-resizer"></span></th>
+        <th>Вес, кг<span class="col-resizer"></span></th>
+        <th>Кол-во мест<span class="col-resizer"></span></th>
+        <th>Доставка, ₽<span class="col-resizer"></span></th>
+        <th>Пошлина, ₽<span class="col-resizer"></span></th>
+        <th>НДС, ₽<span class="col-resizer"></span></th>
+        <th>Там. сбор, ₽<span class="col-resizer"></span></th>
+        <th>Фикс. расходы, ₽<span class="col-resizer"></span></th>
+        <th>Итого, ₽<span class="col-resizer"></span></th>
+        <th>Цена/ед., ₽<span class="col-resizer"></span></th>
+        <th>Цена/ед., €<span class="col-resizer"></span></th>
         <th></th>
       </tr>
     </thead>
@@ -331,31 +394,38 @@
       <tr>
         <td>ИТОГО</td>
         <td></td>
+        <td id="sumGoods">0,00 ₽</td>
         <td></td>
+        <td id="sumWeight">0,00 кг</td>
+        <td id="sumPlaces">0</td>
+        <td id="sumDelivery">0,00 ₽</td>
+        <td id="sumDuty">0,00 ₽</td>
+        <td id="sumVat">0,00 ₽</td>
+        <td id="sumCustomsFee">0,00 ₽</td>
+        <td id="sumFixed">0,00 ₽</td>
+        <td class="grand" id="sumGrand">0,00 ₽</td>
         <td></td>
-        <td></td>
-        <td id="sumDelivery">0,00</td>
-        <td id="sumDuty">0,00</td>
-        <td id="sumVat">0,00</td>
-        <td id="sumCustomsFee">0,00</td>
-        <td id="sumFixed">0,00</td>
-        <td class="grand" id="sumGrand">0,00</td>
+        <td class="grand-eur" id="sumGrandEur">0,00 €</td>
         <td></td>
       </tr>
     </tfoot>
   </table>
+  </div>
 
   <div class="toolbar">
     <button class="add-row" id="addRow">+ Добавить партию</button>
   </div>
 
   <div class="legend">
-    Стоимость всего = Количество × Цена за ед. (в пересчете на ₽)<br>
-    Доставка = Паллет, шт. × Цена за паллету (в пересчете на ₽) × <code>коэффициент 1.312 (если паллет 1 или 2)</code><br>
-    Пошлина = (Стоимость всего + Доставка) × <code>ставка пошлины</code><br>
-    НДС = (Стоимость всего + Доставка + Пошлина) × <code>ставка НДС</code><br>
-    Там. сбор — фиксированная ставка по шкале ПП РФ № 1637 от 28.11.2024 (в ред. № 1638 от 23.10.2025), в зависимости от таможенной стоимости партии (Стоимость всего + Доставка)<br>
-    Итого с НДС = Стоимость всего + Доставка + Пошлина + НДС + Там. сбор + Фикс. расходы
+    1. <b>Товар, ₽</b> = Количество (м²) × Входящая цена (¥) × Курс Юаня<br>
+    2. <b>Вес</b> = Количество (м²) × Плотность (г/м²) / 1000<br>
+    3. <b>Доставка, ₽</b> = Кол-во мест × Доставка за место (в выбранной валюте) × Курс выбранной валюты<br>
+    4. <b>Пошлина, ₽</b> = (Товар + Доставка) × <code>ставка пошлины</code><br>
+    5. <b>НДС, ₽</b> = (Товар + Доставка + Пошлина) × <code>ставка НДС</code><br>
+    6. <b>Там. сбор, ₽</b> — фиксированная ставка в ₽ по шкале ПП РФ № 1637 (от таможенной стоимости)<br>
+    7. <b>Итого, ₽</b> = Товар + Доставка + Пошлина + НДС + Там. сбор + Фикс. расходы<br>
+    8. <b>Цена/ед., ₽</b> = Итого, ₽ / Количество<br>
+    9. <b>Цена/ед., €</b> = Цена/ед., ₽ / Курс Евро
   </div>
 </div>
 
@@ -366,12 +436,6 @@ let rowCount = 0;
 function fmt(n){
   if(isNaN(n)) n = 0;
   return n.toLocaleString('ru-RU', {minimumFractionDigits:2, maximumFractionDigits:2});
-}
-
-function updateInputWidth(input) {
-  const val = input.value || input.placeholder || '';
-  const len = Math.max(val.length, 4);
-  input.style.width = (len * 11 + 28) + 'px';
 }
 
 function getFixedTotal(){
@@ -433,57 +497,38 @@ async function fetchRates() {
   }
 }
 
-function addRow(qty, price, currency, pallets, palletPrice, palletCurrency){
+function addRow(qty, priceCny, density, places){
   rowCount++;
   const tr = document.createElement('tr');
   tr.dataset.id = rowCount;
-  const cur1 = currency || 'EUR';
-  const cur2 = palletCurrency || 'CNY';
   tr.innerHTML = `
-    <td><input type="number" class="qty auto-width" value="${qty ?? ''}" placeholder="0"></td>
+    <td><input type="number" class="qty" value="${qty ?? ''}" placeholder="0"></td>
     <td>
       <div class="cell-group">
-        <input type="number" class="priceVal auto-width" value="${price ?? ''}" placeholder="0.00">
-        <select class="currency-select price-cur">
-          <option value="EUR" ${cur1 === 'EUR' ? 'selected' : ''}>€</option>
-          <option value="USD" ${cur1 === 'USD' ? 'selected' : ''}>$</option>
-          <option value="CNY" ${cur1 === 'CNY' ? 'selected' : ''}>¥</option>
-          <option value="RUB" ${cur1 === 'RUB' ? 'selected' : ''}>₽</option>
-        </select>
+        <input type="number" class="priceCny" value="${priceCny ?? ''}" placeholder="0.00">
+        <span class="cell-symbol">¥</span>
       </div>
     </td>
-    <td class="calc priceRub">0,00</td>
-    <td><input type="number" class="pallets auto-width" value="${pallets ?? ''}" placeholder="0"></td>
-    <td>
-      <div class="cell-group">
-        <input type="number" class="palletPriceVal auto-width" value="${palletPrice ?? ''}" placeholder="0.00">
-        <select class="currency-select pallet-cur">
-          <option value="EUR" ${cur2 === 'EUR' ? 'selected' : ''}>€</option>
-          <option value="USD" ${cur2 === 'USD' ? 'selected' : ''}>$</option>
-          <option value="CNY" ${cur2 === 'CNY' ? 'selected' : ''}>¥</option>
-          <option value="RUB" ${cur2 === 'RUB' ? 'selected' : ''}>₽</option>
-        </select>
-      </div>
-    </td>
-    <td class="calc delivery">0,00</td>
-    <td class="calc duty">0,00</td>
-    <td class="calc vat">0,00</td>
-    <td class="calc customsFee">0,00</td>
-    <td class="calc fixed">0,00</td>
-    <td class="calc result grand">0,00</td>
+    <td class="calc priceRub">0,00 ₽</td>
+    <td><input type="number" class="density" value="${density ?? 80}" placeholder="80"></td>
+    <td class="calc weight">0,00 кг</td>
+    <td><input type="number" class="places" value="${places ?? 1}" placeholder="1"></td>
+    <td class="calc delivery">0,00 ₽</td>
+    <td class="calc duty">0,00 ₽</td>
+    <td class="calc vat">0,00 ₽</td>
+    <td class="calc customsFee">0,00 ₽</td>
+    <td class="calc fixed">0,00 ₽</td>
+    <td class="calc result grand">0,00 ₽</td>
+    <td class="calc result unitRub">0,00 ₽</td>
+    <td class="calc eur-res unitEur">0,00 €</td>
     <td class="del"><button title="Удалить">✕</button></td>
   `;
   rowsBody.appendChild(tr);
 
-  tr.querySelectorAll('input.auto-width').forEach(inp => {
-    updateInputWidth(inp);
-    inp.addEventListener('input', (e) => {
-      updateInputWidth(e.target);
-      recalcAll();
-    });
+  tr.querySelectorAll('input').forEach(inp => {
+    inp.addEventListener('input', recalcAll);
   });
 
-  tr.querySelectorAll('.currency-select').forEach(sel => sel.addEventListener('change', recalcAll));
   tr.querySelector('.del button').addEventListener('click', () => { tr.remove(); recalcAll(); });
 }
 
@@ -491,91 +536,129 @@ function recalcAll(){
   const fixed = getFixedTotal();
   document.getElementById('fcTotal').textContent = fmt(fixed) + ' ₽';
   const {duty: dutyRate, vat: vatRate, eur: eurRate, usd: usdRate, cny: cnyRate} = getRates();
+  const deliveryRate = parseFloat(document.getElementById('deliveryRate').value) || 0;
+  const deliveryCur = document.getElementById('deliveryCurrency').value;
 
-  let sDelivery=0, sDuty=0, sVat=0, sCustomsFee=0, sFixed=0, sGrand=0;
+  let delCurRate = 1;
+  if(deliveryCur === 'USD') delCurRate = usdRate;
+  else if(deliveryCur === 'EUR') delCurRate = eurRate;
+  else if(deliveryCur === 'CNY') delCurRate = cnyRate;
+
+  const deliveryRubPerPlace = deliveryRate * delCurRate;
+
+  let sGoods=0, sDelivery=0, sDuty=0, sVat=0, sCustomsFee=0, sFixed=0, sGrand=0, sWeight=0, sPlaces=0;
 
   rowsBody.querySelectorAll('tr').forEach(tr => {
     const qty = parseFloat(tr.querySelector('.qty').value) || 0;
-    const priceVal = parseFloat(tr.querySelector('.priceVal').value) || 0;
-    const priceCur = tr.querySelector('.price-cur').value;
-    
-    const pallets = parseFloat(tr.querySelector('.pallets').value) || 0;
-    const palletPriceVal = parseFloat(tr.querySelector('.palletPriceVal').value) || 0;
-    const palletCur = tr.querySelector('.pallet-cur').value;
-    
-    let priceRate = 1;
-    if(priceCur === 'EUR') priceRate = eurRate;
-    else if(priceCur === 'USD') priceRate = usdRate;
-    else if(priceCur === 'CNY') priceRate = cnyRate;
+    const priceCny = parseFloat(tr.querySelector('.priceCny').value) || 0;
+    const density = parseFloat(tr.querySelector('.density').value) || 0;
+    const places = parseFloat(tr.querySelector('.places').value) || 0;
 
-    let palletRate = 1;
-    if(palletCur === 'EUR') palletRate = eurRate;
-    else if(palletCur === 'USD') palletRate = usdRate;
-    else if(palletCur === 'CNY') palletRate = cnyRate;
-
-    const priceRub = priceVal * priceRate;
-    const palletPriceRub = palletPriceVal * palletRate;
-    
-    const palletMultiplier = (pallets === 1 || pallets === 2) ? 1.312 : 1.0;
-    const delivery = pallets * palletPriceRub * palletMultiplier;
-
-    if(qty === 0 && priceVal === 0 && pallets === 0 && palletPriceVal === 0){
+    if(qty === 0 && priceCny === 0){
       tr.querySelector('.priceRub').textContent = '—';
+      tr.querySelector('.weight').textContent = '—';
       tr.querySelector('.delivery').textContent = '—';
       tr.querySelector('.duty').textContent = '—';
       tr.querySelector('.vat').textContent = '—';
       tr.querySelector('.customsFee').textContent = '—';
       tr.querySelector('.fixed').textContent = '—';
       tr.querySelector('.grand').textContent = '—';
+      tr.querySelector('.unitRub').textContent = '—';
+      tr.querySelector('.unitEur').textContent = '—';
       return;
     }
 
-    const total = qty * priceRub;
-    const customsValue = total + delivery;
+    const priceGoodsRub = qty * priceCny * cnyRate;
+    const weight = qty * density / 1000;
+    const deliveryRub = places * deliveryRubPerPlace;
+
+    const customsValue = priceGoodsRub + deliveryRub;
     const dutyVal = customsValue * dutyRate;
-    const vatVal = (total + delivery + dutyVal) * vatRate;
+    const vatVal = (customsValue + dutyVal) * vatRate;
     const feeVal = customsFee(customsValue);
-    const grand = total + delivery + dutyVal + vatVal + feeVal + fixed;
+    const grandRub = customsValue + dutyVal + vatVal + feeVal + fixed;
 
-    tr.querySelector('.priceRub').textContent = fmt(priceRub);
-    tr.querySelector('.delivery').textContent = fmt(delivery);
-    tr.querySelector('.duty').textContent = fmt(dutyVal);
-    tr.querySelector('.vat').textContent = fmt(vatVal);
-    tr.querySelector('.customsFee').textContent = fmt(feeVal);
-    tr.querySelector('.fixed').textContent = fmt(fixed);
-    tr.querySelector('.grand').textContent = fmt(grand);
+    const unitRub = qty > 0 ? (grandRub / qty) : 0;
+    const unitEur = eurRate > 0 ? (unitRub / eurRate) : 0;
 
-    sDelivery += delivery;
+    tr.querySelector('.priceRub').textContent = fmt(priceGoodsRub) + ' ₽';
+    tr.querySelector('.weight').textContent = fmt(weight) + ' кг';
+    tr.querySelector('.delivery').textContent = fmt(deliveryRub) + ' ₽';
+    tr.querySelector('.duty').textContent = fmt(dutyVal) + ' ₽';
+    tr.querySelector('.vat').textContent = fmt(vatVal) + ' ₽';
+    tr.querySelector('.customsFee').textContent = fmt(feeVal) + ' ₽';
+    tr.querySelector('.fixed').textContent = fmt(fixed) + ' ₽';
+    tr.querySelector('.grand').textContent = fmt(grandRub) + ' ₽';
+    tr.querySelector('.unitRub').textContent = qty > 0 ? (fmt(unitRub) + ' ₽') : '—';
+    tr.querySelector('.unitEur').textContent = qty > 0 ? (fmt(unitEur) + ' €') : '—';
+
+    sGoods += priceGoodsRub;
+    sDelivery += deliveryRub;
     sDuty += dutyVal;
     sVat += vatVal;
     sCustomsFee += feeVal;
     sFixed += fixed;
-    sGrand += grand;
+    sGrand += grandRub;
+    sWeight += weight;
+    sPlaces += places;
   });
 
-  document.getElementById('sumDelivery').textContent = fmt(sDelivery);
-  document.getElementById('sumDuty').textContent = fmt(sDuty);
-  document.getElementById('sumVat').textContent = fmt(sVat);
-  document.getElementById('sumCustomsFee').textContent = fmt(sCustomsFee);
-  document.getElementById('sumFixed').textContent = fmt(sFixed);
-  document.getElementById('sumGrand').textContent = fmt(sGrand);
+  document.getElementById('sumGoods').textContent = fmt(sGoods) + ' ₽';
+  document.getElementById('sumWeight').textContent = fmt(sWeight) + ' кг';
+  document.getElementById('sumPlaces').textContent = sPlaces;
+  document.getElementById('sumDelivery').textContent = fmt(sDelivery) + ' ₽';
+  document.getElementById('sumDuty').textContent = fmt(sDuty) + ' ₽';
+  document.getElementById('sumVat').textContent = fmt(sVat) + ' ₽';
+  document.getElementById('sumCustomsFee').textContent = fmt(sCustomsFee) + ' ₽';
+  document.getElementById('sumFixed').textContent = fmt(sFixed) + ' ₽';
+  document.getElementById('sumGrand').textContent = fmt(sGrand) + ' ₽';
+  document.getElementById('sumGrandEur').textContent = fmt(eurRate > 0 ? sGrand / eurRate : 0) + ' €';
 }
 
 document.getElementById('addRow').addEventListener('click', () => { addRow(); recalcAll(); });
-document.querySelectorAll('.fixed-costs input, .rates input').forEach(inp => inp.addEventListener('input', () => {
+document.getElementById('deliveryCurrency').addEventListener('change', recalcAll);
+document.querySelectorAll('.fixed-costs input, .rates input').forEach(inp => inp.addEventListener('input', (e) => {
   if(['eurRate', 'usdRate', 'cnyRate'].includes(inp.id)) {
     document.getElementById('updateTime').textContent = 'Изменено вручную';
   }
   recalcAll();
 }));
 
-// начальные строки
-addRow(1000, 20, 'USD', 10, 800, 'CNY');
-for(let i=0;i<4;i++) addRow();
-
-// Загружаем курсы валют при открытии
+addRow(30000, 2, 80, 1);
 fetchRates();
 recalcAll();
+
+(function initColumnResize(){
+  const table = document.getElementById('mainTable');
+  let activeTh = null, startX = 0, startWidth = 0;
+
+  table.querySelectorAll('thead th').forEach(th => {
+    const handle = th.querySelector('.col-resizer');
+    if(!handle) return;
+    handle.addEventListener('mousedown', (e) => {
+      activeTh = th;
+      startX = e.pageX;
+      startWidth = th.offsetWidth;
+      handle.classList.add('active');
+      document.body.style.cursor = 'col-resize';
+      e.preventDefault();
+    });
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if(!activeTh) return;
+    const newWidth = Math.max(40, startWidth + (e.pageX - startX));
+    activeTh.style.width = newWidth + 'px';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if(activeTh){
+      table.querySelectorAll('.col-resizer.active').forEach(h => h.classList.remove('active'));
+      activeTh = null;
+      document.body.style.cursor = '';
+    }
+  });
+})();
 </script>
 </body>
 </html>
